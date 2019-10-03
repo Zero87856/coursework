@@ -1,7 +1,11 @@
+package Controllers;
+
+import Server.Main;
+
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 
-public class AnswersController {
+public class SuccessRatesController {
     public static void listThings() {
 
         try {

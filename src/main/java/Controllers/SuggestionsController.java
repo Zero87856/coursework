@@ -1,7 +1,11 @@
+package Controllers;
+
+import Server.Main;
+
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 
-public class QuestionsController {
+public class SuggestionsController {
     public static void listThings() {
 
         try {
@@ -43,7 +47,7 @@ public class QuestionsController {
 
         try {
 
-            var ps = Main.db.prepareStatement(
+            PreparedStatement ps = Main.db.prepareStatement(
                     "UPDATE Things SET Name = ?, Quantity = ? WHERE Id = ?");
 
             ps.setString(1, name);
@@ -72,3 +76,4 @@ public class QuestionsController {
     }
 
 }
+
