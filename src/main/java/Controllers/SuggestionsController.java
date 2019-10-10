@@ -6,36 +6,36 @@ import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 
 public class SuggestionsController {
-    public static void listThings() {
+    public static void listSuggestions() {
 
         try {
 
-            PreparedStatement ps = Main.db.prepareStatement("SELECT Id, Name, Quantity FROM Things");
+            PreparedStatement ps = Main.db.prepareStatement("SELECT suggestId, suggestContent, suggestAnsTrue FROM suggestions");
 
             ResultSet results = ps.executeQuery();
             while (results.next()) {
                 int id = results.getInt(1);
-                String name = results.getString(2);
-                int quantity = results.getInt(3);
-                System.out.print("Id: " + id + ",  ");
-                System.out.print("Name: " + name + ",  ");
-                System.out.print("Quantity: " + quantity + "\n");
+                String suggestContent = results.getString(2);
+                String suggestAnsTrue = results.getString(3);
+                System.out.print("Suggestion Id: " + id + ",  ");
+                System.out.print("Suggested Content: " + suggestContent + ",  ");
+                System.out.print("True answer: " + suggestAnsTrue + "\n");
             }
 
         } catch (Exception exception) {
             System.out.println("Database error: " + exception.getMessage());
         }
     }
-    public static void insertThing(int id, String name, int quantity) {
+    public static void insertSuggestion(int suggestId, String suggestContent, String suggestAnsTrue) {
 
         try {
 
             PreparedStatement ps = Main.db.prepareStatement(
-                    "INSERT INTO Things (Id, Name, Quantity) VALUES (?, ?, ?)");
+                    "INSERT INTO suggestions (suggestId, suggestContent, suggestAnsTrue) VALUES (?, ?, ?)");
 
-            ps.setInt(1, id);
-            ps.setString(2, name);
-            ps.setInt(3, quantity);
+            ps.setInt(1, suggestId);
+            ps.setString(2, suggestContent);
+            ps.setString(3, suggestAnsTrue);
 
             ps.execute();
 
@@ -43,16 +43,16 @@ public class SuggestionsController {
             System.out.println("Database error: " + exception.getMessage());
         }
     }
-    public static void updateThing(int id, String name, int quantity) {
+    public static void updateSuggest(int suggestId, String suggestContent, String suggestAnsTrue) {
 
         try {
 
             PreparedStatement ps = Main.db.prepareStatement(
-                    "UPDATE Things SET Name = ?, Quantity = ? WHERE Id = ?");
+                    "UPDATE suggestions SET suggestContent = ?, suggestAnsTrue = ? WHERE suggestId = ?");
 
-            ps.setString(1, name);
-            ps.setInt(2, quantity);
-            ps.setInt(3, id);
+            ps.setInt(1, suggestId);
+            ps.setString(2, suggestContent);
+            ps.setString(3, suggestAnsTrue);
 
             ps.execute();
 
@@ -60,11 +60,11 @@ public class SuggestionsController {
             System.out.println("Database error: " + exception.getMessage());
         }
     }
-    public static void deleteThing(int id) {
+    public static void deleteSuggest(int id) {
 
         try {
 
-            PreparedStatement ps = Main.db.prepareStatement("DELETE FROM Things WHERE Id = ?");
+            PreparedStatement ps = Main.db.prepareStatement("DELETE FROM suggestions WHERE suggestId = ?");
 
             ps.setInt(1, id);
 

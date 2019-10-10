@@ -6,36 +6,38 @@ import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 
 public class SuccessRatesController {
-    public static void listThings() {
+    public static void listSuccess() {
 
         try {
 
-            PreparedStatement ps = Main.db.prepareStatement("SELECT Id, Name, Quantity FROM Things");
+            PreparedStatement ps = Main.db.prepareStatement("SELECT questionWin, questionNo, attempt FROM successRates");
 
             ResultSet results = ps.executeQuery();
             while (results.next()) {
                 int id = results.getInt(1);
-                String name = results.getString(2);
-                int quantity = results.getInt(3);
-                System.out.print("Id: " + id + ",  ");
-                System.out.print("Name: " + name + ",  ");
-                System.out.print("Quantity: " + quantity + "\n");
+                int name = results.getInt(2);
+                int quantity = results.getInt(4);
+                System.out.print("Success Rate: " + id + ",  ");
+                System.out.print("Question: " + name + ",  ");
+                System.out.print("Attempts: " + quantity + "\n");
             }
 
         } catch (Exception exception) {
             System.out.println("Database error: " + exception.getMessage());
         }
     }
-    public static void insertThing(int id, String name, int quantity) {
+    public static void insertRate(int successRate, int questionNo, int successCount, int attempts) {
 
         try {
 
             PreparedStatement ps = Main.db.prepareStatement(
-                    "INSERT INTO Things (Id, Name, Quantity) VALUES (?, ?, ?)");
+                    "INSERT INTO successRates (questionWin, questionNo, successCount, attempt) VALUES (?, ?, ?, ?)");
 
-            ps.setInt(1, id);
-            ps.setString(2, name);
-            ps.setInt(3, quantity);
+            ps.setInt(1, successRate);
+            ps.setInt(2, questionNo);
+            ps.setInt(3, successCount);
+            ps.setInt(4, attempts);
+
 
             ps.execute();
 
@@ -43,16 +45,17 @@ public class SuccessRatesController {
             System.out.println("Database error: " + exception.getMessage());
         }
     }
-    public static void updateThing(int id, String name, int quantity) {
+    public static void updateRates(int successRate, int questionNo, int successCount, int attempts) {
 
         try {
 
             PreparedStatement ps = Main.db.prepareStatement(
-                    "UPDATE Things SET Name = ?, Quantity = ? WHERE Id = ?");
+                    "UPDATE successRates SET questionWin = ?, successCount = ?, attempt = ? WHERE questionNo = ?");
 
-            ps.setString(1, name);
-            ps.setInt(2, quantity);
-            ps.setInt(3, id);
+            ps.setInt(1, successRate);
+            ps.setInt(2, questionNo);
+            ps.setInt(3, successCount);
+            ps.setInt(4, attempts);
 
             ps.execute();
 
@@ -60,13 +63,13 @@ public class SuccessRatesController {
             System.out.println("Database error: " + exception.getMessage());
         }
     }
-    public static void deleteThing(int id) {
+    public static void deleteRates(int questionNo) {
 
         try {
 
-            PreparedStatement ps = Main.db.prepareStatement("DELETE FROM Things WHERE Id = ?");
+            PreparedStatement ps = Main.db.prepareStatement("DELETE FROM successRates WHERE questionNo = ?");
 
-            ps.setInt(1, id);
+            ps.setInt(1, questionNo);
 
             ps.execute();
 
