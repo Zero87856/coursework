@@ -21,17 +21,23 @@ public class Main {
         config.register(MultiPartFeature.class);
         ServletHolder servlet = new ServletHolder(new ServletContainer(config));
 
-        Server server = new Server(8081);
-        ServletContextHandler context = new ServletContextHandler(server, "/");
-        context.addServlet(servlet, "/*");
 
-        try {
-            server.start();
-            System.out.println("Server successfully started.");
-            server.join();
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
+        Controllers.AnswersController.listAnswers();
+        //Controllers.AnswersController.insertThing(3,"q","w","e","r", "t");
+        //Controllers.AnswersController.updateThing(2,"2");
+        //Controllers.AnswersController.deleteThing(1);
+
+        //Server server = new Server(8081);
+        //ServletContextHandler context = new ServletContextHandler(server, "/");
+        //context.addServlet(servlet, "/*");
+
+        //try {
+        //    server.start();
+        //    System.out.println("Server successfully started.");
+        //    server.join();
+        //} catch (Exception e) {
+        //    e.printStackTrace();
+        //}
     }
 
 
