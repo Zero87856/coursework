@@ -23,10 +23,10 @@ public class Main {
 
 
         //Controllers.AnswersController.listAnswers();
-        //Controllers.AnswersController.insertThing(3,"q","w","e","r", "t");
+        //Controllers.AnswersController.insertThing(5,"q","w","e","r", "t");
         //Controllers.AnswersController.updateThing(2,"5");
         //Controllers.AnswersController.deleteThing(1);
-
+        //Controllers.QuestionsController.listQuestionsAndAnswers();
 
         //Server server = new Server(8081);
         //ServletContextHandler context = new ServletContextHandler(server, "/");

@@ -26,6 +26,31 @@ public class QuestionsController {
             System.out.println("Database error: " + exception.getMessage());
         }
     }
+    public static void listQuestionsAndAnswers() {
+
+        try {
+
+            PreparedStatement ps = Main.db.prepareStatement("select questionNo, questionContent, answerA,answerB,answerC, answerD from questions inner join answers a on questions.answerSet = a.answerSet;");
+
+            ResultSet results = ps.executeQuery();
+            while (results.next()) {
+                int id = results.getInt(1);
+                String cont = results.getString(2);
+                String ansA = results.getString(3);
+                String ansB = results.getString(4);
+                String ansC = results.getString(5);
+                String ansD = results.getString(6);
+                System.out.print("Q"+ id +": " + cont + ",  ");
+                System.out.print("A: " + ansA + ",  ");
+                System.out.print("B: " + ansB + ",  ");
+                System.out.print("C: " + ansC + ",  ");
+                System.out.print("D: " + ansD + "\n");
+            }
+
+        } catch (Exception exception) {
+            System.out.println("Database error: " + exception.getMessage());
+        }
+    }
     public static void insertQuestions(int questionNo, String questionContent, int questionDifficulty) {
 
         try {
