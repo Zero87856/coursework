@@ -47,7 +47,7 @@ public class AnswersController {
     @GET
     @Path("addAnswers")
     @Produces(MediaType.APPLICATION_JSON)
-    public static void insertThing(int answerSet, String answerA,String answerB, String answerC, String answerD, String answerTrue) {
+    public static void insertAnswers(int answerSet, String answerA,String answerB, String answerC, String answerD, String answerTrue) {
         //System.out.println("answers/addAnswers");
         //JSONArray list = new JSONArray();
         try {
@@ -68,7 +68,7 @@ public class AnswersController {
             System.out.println("Database error: " + exception.getMessage());
         }
     }
-    public static void updateThing(int answerSet, String answerTrue) {
+    public static void updateAnswers(int answerSet, String answerTrue) {
 
         try {
 
@@ -84,7 +84,7 @@ public class AnswersController {
             System.out.println("Database error: " + exception.getMessage());
         }
     }
-    public static void deleteThing(int answerSet) {
+    public static void deleteAnswers(int answerSet) {
 
         try {
 

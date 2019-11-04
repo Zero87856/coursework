@@ -27,6 +27,7 @@ public class Main {
         //Controllers.AnswersController.updateThing(2,"5");
         //Controllers.AnswersController.deleteThing(1);
         //Controllers.QuestionsController.listQuestionsAndAnswers();
+        Controllers.QuestionsController.listQuestions();
 
         //Server server = new Server(8081);
         //ServletContextHandler context = new ServletContextHandler(server, "/");

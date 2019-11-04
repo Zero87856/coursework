@@ -16,7 +16,7 @@ public class QuestionsController {
             while (results.next()) {
                 int id = results.getInt(1);
                 String questionContent = results.getString(2);
-                int difficulty = results.getInt(4);
+                int difficulty = results.getInt(3);
                 System.out.print("Id: " + id + ",  ");
                 System.out.print("Name: " + questionContent + ",  ");
                 System.out.print("Quantity: " + difficulty + "\n");
