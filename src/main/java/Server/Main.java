@@ -29,17 +29,17 @@ public class Main {
         //Controllers.QuestionsController.listQuestionsAndAnswers();
         //Controllers.QuestionsController.listQuestions();
 
-        //Server server = new Server(8081);
-        //ServletContextHandler context = new ServletContextHandler(server, "/");
-        //context.addServlet(servlet, "/*");
+        Server server = new Server(8081);
+        ServletContextHandler context = new ServletContextHandler(server, "/");
+        context.addServlet(servlet, "/*");
 
-        //try {
-        //    server.start();
-        //    System.out.println("Server successfully started.");
-        //    server.join();
-        //} catch (Exception e) {
-        //    e.printStackTrace();
-        //}
+        try {
+            server.start();
+            System.out.println("Server successfully started.");
+            server.join();
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
     }
 
 
