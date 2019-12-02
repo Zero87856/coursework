@@ -146,7 +146,7 @@ public class QuestionsController {
 
         try {
 
-            PreparedStatement ps = Main.db.prepareStatement("DELETE FROM questions WHERE Id = ?");
+            PreparedStatement ps = Main.db.prepareStatement("DELETE FROM questions WHERE questionNo = ?");
 
             ps.setInt(1, questionNo);
 
