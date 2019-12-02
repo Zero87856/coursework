@@ -1,10 +1,16 @@
 package Controllers;
 
 import Server.Main;
+import org.json.simple.JSONArray;
+import org.json.simple.JSONObject;
 
+import javax.ws.rs.GET;
+import javax.ws.rs.Path;
+import javax.ws.rs.Produces;
+import javax.ws.rs.core.MediaType;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
-
+@Path("question/")
 public class QuestionsController {
     public static void listQuestions() {
 
@@ -26,29 +32,80 @@ public class QuestionsController {
             System.out.println("Database error: " + exception.getMessage());
         }
     }
-    public static void listQuestionsAndAnswers() {
-
+    @GET
+    @Path("findImage")
+    @Produces(MediaType.APPLICATION_JSON)
+    public String findImage(int questionNo){
+        System.out.println("question/image");
+        JSONArray list = new JSONArray();
+        try{
+            PreparedStatement ps = Main.db.prepareStatement("select(\"image\") from questions where questionNo = ?");
+            ResultSet results = ps.executeQuery();
+            JSONObject item = new JSONObject();
+            item.put("img", results.getString(1));
+            list.add(item);
+            return list.toString();
+        }
+        catch(Exception exception){
+            System.out.println("Database error: " + exception.getMessage());
+            return "{\"error\": \"Unable to list items, please see server console for more info.\"}";
+        }
+    }
+    @GET
+    @Path("findFeedback")
+    @Produces(MediaType.APPLICATION_JSON)
+    public String findFeedback(int questionNo){
+        System.out.println("question/feedback");
+        JSONArray list = new JSONArray();
+        try{
+            PreparedStatement ps = Main.db.prepareStatement("select(\"feedback\") from questions where questionNo = ?");
+            ResultSet results = ps.executeQuery();
+            JSONObject item = new JSONObject();
+            item.put("feedback", results.getString(1));
+            list.add(item);
+            return list.toString();
+        }
+        catch(Exception exception){
+            System.out.println("Database error: " + exception.getMessage());
+            return "{\"error\": \"Unable to list items, please see server console for more info.\"}";
+        }
+    }
+    @GET
+    @Path("startQuiz")
+    @Produces(MediaType.APPLICATION_JSON)
+    public String listQuestionsAndAnswers() {
+        System.out.println("question/startQuiz");
+        JSONArray list = new JSONArray();
         try {
 
             PreparedStatement ps = Main.db.prepareStatement("select questionNo, questionContent, answerA,answerB,answerC, answerD from questions inner join answers a on questions.answerSet = a.answerSet;");
 
             ResultSet results = ps.executeQuery();
             while (results.next()) {
-                int id = results.getInt(1);
-                String cont = results.getString(2);
-                String ansA = results.getString(3);
-                String ansB = results.getString(4);
-                String ansC = results.getString(5);
-                String ansD = results.getString(6);
-                System.out.print("Q"+ id +": " + cont + ",  ");
-                System.out.print("A: " + ansA + ",  ");
-                System.out.print("B: " + ansB + ",  ");
-                System.out.print("C: " + ansC + ",  ");
-                System.out.print("D: " + ansD + "\n");
+                //int id = results.getInt(1);
+                //String cont = results.getString(2);
+                //String ansA = results.getString(3);
+                //String ansB = results.getString(4);
+                //String ansC = results.getString(5);
+                //String ansD = results.getString(6);
+                //System.out.print("Q"+ id +": " + cont + ",  ");
+                //System.out.print("A: " + ansA + ",  ");
+                //System.out.print("B: " + ansB + ",  ");
+                //System.out.print("C: " + ansC + ",  ");
+                //System.out.print("D: " + ansD + "\n");
+                JSONObject item = new JSONObject();
+                item.put("No", results.getInt(1));
+                item.put("Q", results.getString(2));
+                item.put("A", results.getString(3));
+                item.put("B", results.getString(4));
+                item.put("C", results.getString(5));
+                item.put("D", results.getString(5));
+                list.add(item);
             }
-
+            return list.toString();
         } catch (Exception exception) {
             System.out.println("Database error: " + exception.getMessage());
+            return "{\"error\": \"Unable to list items, please see server console for more info.\"}";
         }
     }
     public static void insertQuestions(int questionNo, String questionContent, int questionDifficulty) {

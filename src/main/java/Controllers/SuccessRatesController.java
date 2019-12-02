@@ -1,29 +1,73 @@
 package Controllers;
 
 import Server.Main;
+import org.json.simple.JSONArray;
+import org.json.simple.JSONObject;
 
+import javax.ws.rs.GET;
+import javax.ws.rs.Path;
+import javax.ws.rs.Produces;
+import javax.ws.rs.core.MediaType;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
-
+@Path("success/")
 public class SuccessRatesController {
-    public static void listSuccess() {
+    @GET
+    @Path("results")
+    @Produces(MediaType.APPLICATION_JSON)
+    public String listSuccess() {
+        System.out.println("success/results");
+        JSONArray list = new JSONArray();
 
         try {
 
-            PreparedStatement ps = Main.db.prepareStatement("SELECT questionWin, questionNo, attempt FROM successRates");
+            PreparedStatement ps = Main.db.prepareStatement("SELECT questionWin, questionNo, successCount, attempt FROM successRates");
 
             ResultSet results = ps.executeQuery();
             while (results.next()) {
-                int id = results.getInt(1);
-                int name = results.getInt(2);
-                int quantity = results.getInt(4);
-                System.out.print("Success Rate: " + id + ",  ");
-                System.out.print("Question: " + name + ",  ");
-                System.out.print("Attempts: " + quantity + "\n");
+                //int id = results.getInt(1);
+                //int name = results.getInt(2);
+                //int guess = results.getInt(3);
+                //int quantity = results.getInt(4);
+                //System.out.print("Success Rate: " + id + ",  ");
+                //System.out.print("Question: " + name + ",  ");
+                //System.out.print("Times correct: " + guess + ",  ");
+                //System.out.print("Attempts: " + quantity + "\n");
+                JSONObject item = new JSONObject();
+                item.put("Success Rate", results.getInt(1));
+                item.put("Question", results.getInt(2));
+                item.put("Times Correct", results.getInt(3));
+                item.put("Attempts", results.getInt(4));
+                list.add(item);
             }
-
+            return list.toString();
         } catch (Exception exception) {
             System.out.println("Database error: " + exception.getMessage());
+            return "{\"error\": \"Unable to list items, please see server console for more info.\"}";
+        }
+    }
+    @GET
+    @Path("calc")
+    @Produces(MediaType.APPLICATION_JSON)
+    public String calcSuccess() {
+        System.out.println("success/calc");
+        JSONArray list = new JSONArray();
+
+        try {
+
+            PreparedStatement ps = Main.db.prepareStatement("SELECT questionWin, successCount, attempt FROM successRates where questionNo = ?");
+
+            ResultSet results = ps.executeQuery();
+
+            JSONObject item = new JSONObject();
+            list.add(item);
+            item.get(results.getInt(2));
+            item.get(results.getInt(3));
+
+            return list.toString();
+        } catch (Exception exception) {
+            System.out.println("Database error: " + exception.getMessage());
+            return "{\"error\": \"Unable to list items, please see server console for more info.\"}";
         }
     }
     public static void insertRate(int successRate, int questionNo, int successCount, int attempts) {
