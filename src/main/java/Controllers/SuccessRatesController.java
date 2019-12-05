@@ -4,9 +4,7 @@ import Server.Main;
 import org.json.simple.JSONArray;
 import org.json.simple.JSONObject;
 
-import javax.ws.rs.GET;
-import javax.ws.rs.Path;
-import javax.ws.rs.Produces;
+import javax.ws.rs.*;
 import javax.ws.rs.core.MediaType;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
@@ -15,7 +13,7 @@ public class SuccessRatesController {
     @GET
     @Path("results")
     @Produces(MediaType.APPLICATION_JSON)
-    public String listSuccess() {
+    public String findSuccess() {
         System.out.println("success/results");
         JSONArray list = new JSONArray();
 
@@ -89,12 +87,15 @@ public class SuccessRatesController {
             System.out.println("Database error: " + exception.getMessage());
         }
     }
-    public static void updateRates(int successRate, int questionNo, int successCount, int attempts) {
+    @POST
+    @Path("update")
+    @Consumes(MediaType.MULTIPART_FORM_DATA)
+    @Produces(MediaType.APPLICATION_JSON)
+    public String updateRates(int successRate, int questionNo, int successCount, int attempts) {
 
         try {
 
-            PreparedStatement ps = Main.db.prepareStatement(
-                    "UPDATE successRates SET questionWin = ?, successCount = ?, attempt = ? WHERE questionNo = ?");
+            PreparedStatement ps = Main.db.prepareStatement("UPDATE successRates SET questionWin = ?, successCount = ?, attempt = ? WHERE questionNo = ?");
 
             ps.setInt(1, successRate);
             ps.setInt(2, questionNo);
@@ -102,9 +103,10 @@ public class SuccessRatesController {
             ps.setInt(4, attempts);
 
             ps.execute();
-
+            return "{\"status\": \"OK\"}";
         } catch (Exception exception) {
             System.out.println("Database error: " + exception.getMessage());
+            return "{\"error\": \"Unable to update item, please see server console for more info.\"}";
         }
     }
     public static void deleteRates(int questionNo) {
