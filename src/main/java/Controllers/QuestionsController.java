@@ -6,6 +6,7 @@ import org.json.simple.JSONObject;
 
 import javax.ws.rs.GET;
 import javax.ws.rs.Path;
+import javax.ws.rs.PathParam;
 import javax.ws.rs.Produces;
 import javax.ws.rs.core.MediaType;
 import java.sql.PreparedStatement;
@@ -33,17 +34,21 @@ public class QuestionsController {
         }
     }
     @GET
-    @Path("findImage")
+    @Path("image")
     @Produces(MediaType.APPLICATION_JSON)
-    public String findImage(int questionNo){
-        System.out.println("question/image");
+    public String findImage(@PathParam("questionNo") Integer questionNo){
+        System.out.println("question/image/" + questionNo);
+
         JSONArray list = new JSONArray();
         try{
             PreparedStatement ps = Main.db.prepareStatement("select(\"image\") from questions where questionNo = ?");
+            ps.setInt(1, questionNo);
             ResultSet results = ps.executeQuery();
             JSONObject item = new JSONObject();
-            item.put("img", results.getString(1));
-            list.add(item);
+            if (results.next()) {
+                item.put("img", results.getString(questionNo));
+                list.add(item);
+            }
             return list.toString();
         }
         catch(Exception exception){
@@ -52,9 +57,9 @@ public class QuestionsController {
         }
     }
     @GET
-    @Path("findFeedback")
+    @Path("feedback")
     @Produces(MediaType.APPLICATION_JSON)
-    public String findFeedback(int questionNo){
+    public String findFeedback(){
         System.out.println("question/feedback");
         JSONArray list = new JSONArray();
         try{

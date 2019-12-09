@@ -87,10 +87,10 @@ public class SuccessRatesController {
             System.out.println("Database error: " + exception.getMessage());
         }
     }
-    @POST
-    @Path("update")
-    @Consumes(MediaType.MULTIPART_FORM_DATA)
-    @Produces(MediaType.APPLICATION_JSON)
+    //@POST
+    //@Path("update")
+    //@Consumes(MediaType.MULTIPART_FORM_DATA)
+    //@Produces(MediaType.APPLICATION_JSON)
     public String updateRates(int successRate, int questionNo, int successCount, int attempts) {
 
         try {
