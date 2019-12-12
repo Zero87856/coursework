@@ -3,14 +3,15 @@ package Controllers;
 import Server.Main;
 import org.json.simple.JSONArray;
 import org.json.simple.JSONObject;
-
 import javax.ws.rs.GET;
+import javax.ws.rs.POST;
 import javax.ws.rs.Path;
 import javax.ws.rs.PathParam;
 import javax.ws.rs.Produces;
 import javax.ws.rs.core.MediaType;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
+
 @Path("question/")
 public class QuestionsController {
     public static void listQuestions() {
@@ -34,22 +35,22 @@ public class QuestionsController {
         }
     }
     @GET
-    @Path("image")
+    @Path("image/{qNo}")
     @Produces(MediaType.APPLICATION_JSON)
-    public String findImage(@PathParam("questionNo") Integer questionNo){
-        System.out.println("question/image/" + questionNo);
+    public String findImage(@PathParam("qNo") Integer qNo){
 
-        JSONArray list = new JSONArray();
+        System.out.println("question/image/" + qNo);
+
         try{
-            PreparedStatement ps = Main.db.prepareStatement("select(\"image\") from questions where questionNo = ?");
-            ps.setInt(1, questionNo);
+            PreparedStatement ps = Main.db.prepareStatement("SELECT image FROM questions WHERE questionNo = ?");
+            ps.setInt(1, qNo);
             ResultSet results = ps.executeQuery();
             JSONObject item = new JSONObject();
             if (results.next()) {
-                item.put("img", results.getString(questionNo));
-                list.add(item);
+                item.put("questionNo", qNo);
+                item.put("img", results.getString(1));
             }
-            return list.toString();
+            return item.toString();
         }
         catch(Exception exception){
             System.out.println("Database error: " + exception.getMessage());
@@ -57,18 +58,18 @@ public class QuestionsController {
         }
     }
     @GET
-    @Path("feedback")
+    @Path("feedback/{qNo}")
     @Produces(MediaType.APPLICATION_JSON)
-    public String findFeedback(){
-        System.out.println("question/feedback");
-        JSONArray list = new JSONArray();
+    public String findFeedback(@PathParam("qNo") Integer qNo){
+        System.out.println("question/feedback" + qNo);
+
         try{
-            PreparedStatement ps = Main.db.prepareStatement("select(\"feedback\") from questions where questionNo = ?");
+            PreparedStatement ps = Main.db.prepareStatement("select feedback from questions where questionNo = ?");
+            ps.setInt(1, qNo);
             ResultSet results = ps.executeQuery();
             JSONObject item = new JSONObject();
             item.put("feedback", results.getString(1));
-            list.add(item);
-            return list.toString();
+            return item.toString();
         }
         catch(Exception exception){
             System.out.println("Database error: " + exception.getMessage());
@@ -104,7 +105,7 @@ public class QuestionsController {
                 item.put("A", results.getString(3));
                 item.put("B", results.getString(4));
                 item.put("C", results.getString(5));
-                item.put("D", results.getString(5));
+                item.put("D", results.getString(6));
                 list.add(item);
             }
             return list.toString();
