@@ -114,6 +114,32 @@ public class QuestionsController {
             return "{\"error\": \"Unable to list items, please see server console for more info.\"}";
         }
     }
+    @GET
+    @Path("diffCalc/{qNo}")
+    @Produces(MediaType.APPLICATION_JSON)
+    public String difficultyCalc(@PathParam("qNo") Integer qNo) {
+        System.out.println("question/diffCalc");
+        try {
+            float qWin= 0;
+            PreparedStatement ps = Main.db.prepareStatement("SELECT questionWin FROM successRates where questionNo = ?");
+            ps.setInt(1,qNo);
+            ResultSet results = ps.executeQuery();
+            System.out.println("Test");
+            if(results.next()){
+
+            }
+            PreparedStatement ps1 = Main.db.prepareStatement("UPDATE successRates SET questionWin = ? WHERE questionNo = ? ");
+            System.out.println("inserting");
+            ps1.setInt(2, qNo);
+            ps1.setFloat(1, qWin);
+            ps1.execute();
+            System.out.println("done");
+            return "{\"status\": \"OK\"}";
+        } catch (Exception exception) {
+            System.out.println("Database error: " + exception.getMessage());
+            return "{\"error\": \"Unable to list items, please see server console for more info.\"}";
+        }
+    }
     public static void insertQuestions(int questionNo, String questionContent, int questionDifficulty) {
 
         try {
