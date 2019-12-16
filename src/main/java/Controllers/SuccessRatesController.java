@@ -45,24 +45,33 @@ public class SuccessRatesController {
         }
     }
     @GET
-    @Path("calc")
+    @Path("calc/{qNo}")
     @Produces(MediaType.APPLICATION_JSON)
-    public String calcSuccess() {
+    public String calcSuccess(@PathParam("qNo") Integer qNo) {
         System.out.println("success/calc");
-        JSONArray list = new JSONArray();
 
         try {
-
-            PreparedStatement ps = Main.db.prepareStatement("SELECT questionWin, successCount, attempt FROM successRates where questionNo = ?");
-
+            float qWin= 0;
+            PreparedStatement ps = Main.db.prepareStatement("SELECT successCount, attempt FROM successRates where questionNo = ?");
+            ps.setInt(1,qNo);
             ResultSet results = ps.executeQuery();
-
-            JSONObject item = new JSONObject();
-            list.add(item);
-            item.get(results.getInt(2));
-            item.get(results.getInt(3));
-
-            return list.toString();
+            System.out.println("Test");
+            if (results.next()){
+                System.out.println(qNo);
+                float succ = results.getInt(1);
+                System.out.println(succ);
+                float att = results.getInt(2);
+                System.out.println(att);
+                qWin = ((succ/att)*100);
+                System.out.println(qWin);
+            }
+            PreparedStatement ps1 = Main.db.prepareStatement("UPDATE successRates SET questionWin = ? WHERE questionNo = ? ");
+            System.out.println("inserting");
+            ps1.setInt(2, qNo);
+            ps1.setFloat(1, qWin);
+            ps1.execute();
+            System.out.println("done");
+            return "{\"status\": \"OK\"}";
         } catch (Exception exception) {
             System.out.println("Database error: " + exception.getMessage());
             return "{\"error\": \"Unable to list items, please see server console for more info.\"}";
