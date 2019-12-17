@@ -58,7 +58,7 @@ public class QuestionsController {
         }
     }
     @GET
-    @Path("feedback/{qNo}")
+    @Path("tips/{qNo}")
     @Produces(MediaType.APPLICATION_JSON)
     public String findFeedback(@PathParam("qNo") Integer qNo){
         System.out.println("question/feedback" + qNo);
@@ -115,23 +115,62 @@ public class QuestionsController {
         }
     }
     @GET
+    @Path("startQuiz/{qNo}")
+    @Produces(MediaType.APPLICATION_JSON)
+    public String listQuestionAndAnswers(@PathParam("qNo") Integer qNo) {
+        System.out.println("question/startQuiz");
+        JSONArray list = new JSONArray();
+        try {
+
+            PreparedStatement ps = Main.db.prepareStatement("select questionContent, answerA,answerB,answerC, answerD from questions inner join answers a on questions.answerSet = a.answerSet where questionNo = ?;");
+            ps.setInt(1,qNo);
+            ResultSet results = ps.executeQuery();
+            while (results.next()) {
+                JSONObject item = new JSONObject();
+                item.put("No", qNo);
+                item.put("Q", results.getString(1));
+                item.put("A", results.getString(2));
+                item.put("B", results.getString(3));
+                item.put("C", results.getString(4));
+                item.put("D", results.getString(5));
+                list.add(item);
+            }
+            return list.toString();
+        } catch (Exception exception) {
+            System.out.println("Database error: " + exception.getMessage());
+            return "{\"error\": \"Unable to list items, please see server console for more info.\"}";
+        }
+    }
+    @GET
     @Path("diffCalc/{qNo}")
     @Produces(MediaType.APPLICATION_JSON)
     public String difficultyCalc(@PathParam("qNo") Integer qNo) {
         System.out.println("question/diffCalc");
         try {
-            float qWin= 0;
+            float qDif= 0;
             PreparedStatement ps = Main.db.prepareStatement("SELECT questionWin FROM successRates where questionNo = ?");
             ps.setInt(1,qNo);
             ResultSet results = ps.executeQuery();
             System.out.println("Test");
             if(results.next()){
-
+                float qWin = results.getInt(1);
+                System.out.println(qWin);
+                if (qWin>80){
+                    qDif = 1;
+                }else if (qWin>60){
+                    qDif = 2;
+                }else if (qWin>40){
+                    qDif = 3;
+                }else if (qWin>20){
+                    qDif = 4;
+                }else{
+                    qDif = 5;
+                }
             }
-            PreparedStatement ps1 = Main.db.prepareStatement("UPDATE successRates SET questionWin = ? WHERE questionNo = ? ");
+            PreparedStatement ps1 = Main.db.prepareStatement("UPDATE questions SET questionDifficulty = ? WHERE questionNo = ? ");
             System.out.println("inserting");
             ps1.setInt(2, qNo);
-            ps1.setFloat(1, qWin);
+            ps1.setFloat(1, qDif);
             ps1.execute();
             System.out.println("done");
             return "{\"status\": \"OK\"}";

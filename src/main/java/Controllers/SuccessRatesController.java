@@ -45,6 +45,33 @@ public class SuccessRatesController {
         }
     }
     @GET
+    @Path("results/{qNo}")
+    @Produces(MediaType.APPLICATION_JSON)
+    public String findASuccess(@PathParam("qNo") Integer qNo) {
+        System.out.println("success/results");
+        JSONArray list = new JSONArray();
+
+        try {
+
+            PreparedStatement ps = Main.db.prepareStatement("SELECT questionWin, successCount, attempt FROM successRates where questionNo = ?");
+            ps.setInt(1, qNo);
+            ResultSet results = ps.executeQuery();
+            while (results.next()) {
+
+                JSONObject item = new JSONObject();
+                item.put("Success Rate", results.getInt(1));
+                item.put("Question", qNo);
+                item.put("Times Correct", results.getInt(2));
+                item.put("Attempts", results.getInt(3));
+                list.add(item);
+            }
+            return list.toString();
+        } catch (Exception exception) {
+            System.out.println("Database error: " + exception.getMessage());
+            return "{\"error\": \"Unable to list items, please see server console for more info.\"}";
+        }
+    }
+    @GET
     @Path("calc/{qNo}")
     @Produces(MediaType.APPLICATION_JSON)
     public String calcSuccess(@PathParam("qNo") Integer qNo) {
