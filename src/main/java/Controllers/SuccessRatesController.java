@@ -1,6 +1,9 @@
 package Controllers;
 
 import Server.Main;
+
+
+import org.glassfish.jersey.media.multipart.FormDataParam;
 import org.json.simple.JSONArray;
 import org.json.simple.JSONObject;
 
@@ -127,21 +130,24 @@ public class SuccessRatesController {
     @Path("update")
     @Consumes(MediaType.MULTIPART_FORM_DATA)
     @Produces(MediaType.APPLICATION_JSON)
-    public String updateRates(int questionNo, int successCount, int attempts) {
+    public String updateRates(@FormDataParam("questionNo") Integer questionNo, @FormDataParam("successCount") Integer successCount, @FormDataParam("attempts") Integer attempts) {
 
         try {
+            if (questionNo == null || successCount == null || attempts == null) {
+            throw new Exception("One or more form data parameters are missing in the HTTP request."); }
+            System.out.println("thing/update id=" + questionNo);
 
             PreparedStatement ps = Main.db.prepareStatement("UPDATE successRates SET successCount = ?, attempt = ? WHERE questionNo = ?");
 
-            ps.setInt(1, questionNo);
-            ps.setInt(2, successCount);
-            ps.setInt(3, attempts);
-
+            ps.setInt(1, successCount);
+            ps.setInt(2, attempts);
+            ps.setInt(3, questionNo);
             ps.execute();
             return "{\"status\": \"OK\"}";
         } catch (Exception exception) {
             System.out.println("Database error: " + exception.getMessage());
             return "{\"error\": \"Unable to update item, please see server console for more info.\"}";
+
         }
     }
     public static void deleteRates(int questionNo) {

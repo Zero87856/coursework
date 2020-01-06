@@ -3,14 +3,17 @@ package Controllers;
 import Server.Main;
 import org.json.simple.JSONArray;
 import org.json.simple.JSONObject;
+
+import javax.validation.constraints.Null;
 import javax.ws.rs.GET;
 import javax.ws.rs.POST;
 import javax.ws.rs.Path;
 import javax.ws.rs.PathParam;
 import javax.ws.rs.Produces;
 import javax.ws.rs.core.MediaType;
-import java.sql.PreparedStatement;
-import java.sql.ResultSet;
+import java.sql.*;
+import java.util.ArrayList;
+import java.util.Collections;
 
 @Path("question/")
 public class QuestionsController {
@@ -141,6 +144,38 @@ public class QuestionsController {
             return "{\"error\": \"Unable to list items, please see server console for more info.\"}";
         }
     }
+    @GET
+    @Path("ranCheck")
+    @Produces(MediaType.APPLICATION_JSON)
+    public int num() {
+        try {
+            //Class.forName("com.mysql.jdbc.Driver");
+            //Connection connect = DriverManager.getConnection("jdbc:mysql://localhost/questions");
+            //Statement statement = connect.createStatement();
+            PreparedStatement ps = Main.db.prepareStatement("select count(*) from questions");
+            ResultSet results = ps.executeQuery();
+            int count = 0;
+            while (results.next()){
+                count++;
+            }
+            return(count);
+        }
+        catch (Exception e) {
+            return (0);
+        }
+    }
+    public void main(String[] args) {
+        ArrayList<Integer> list = new ArrayList<>();
+        for (int i = 1; i <= num(); i++) {
+            list.add(i);
+        }
+        Collections.shuffle(list);
+        for (int i = 0; i < 10; i++) {
+            System.out.println(list.get(i));
+        }
+    }
+
+
     @GET
     @Path("diffCalc/{qNo}")
     @Produces(MediaType.APPLICATION_JSON)
