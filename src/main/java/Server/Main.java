@@ -49,10 +49,6 @@ public class Main {
     }
 
 
-
-
-
-
     public static Connection db = null;
 
     private static void openDatabase(String database)
@@ -84,6 +80,5 @@ public class Main {
             System.out.println("Database disconnection error: " + exception.getMessage());
         }
     }
-
 
 }
