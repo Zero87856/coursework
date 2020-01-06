@@ -123,20 +123,19 @@ public class SuccessRatesController {
             System.out.println("Database error: " + exception.getMessage());
         }
     }
-    //@POST
-    //@Path("update")
-    //@Consumes(MediaType.MULTIPART_FORM_DATA)
-    //@Produces(MediaType.APPLICATION_JSON)
-    public String updateRates(int successRate, int questionNo, int successCount, int attempts) {
+    @POST
+    @Path("update")
+    @Consumes(MediaType.MULTIPART_FORM_DATA)
+    @Produces(MediaType.APPLICATION_JSON)
+    public String updateRates(int questionNo, int successCount, int attempts) {
 
         try {
 
-            PreparedStatement ps = Main.db.prepareStatement("UPDATE successRates SET questionWin = ?, successCount = ?, attempt = ? WHERE questionNo = ?");
+            PreparedStatement ps = Main.db.prepareStatement("UPDATE successRates SET successCount = ?, attempt = ? WHERE questionNo = ?");
 
-            ps.setInt(1, successRate);
-            ps.setInt(2, questionNo);
-            ps.setInt(3, successCount);
-            ps.setInt(4, attempts);
+            ps.setInt(1, questionNo);
+            ps.setInt(2, successCount);
+            ps.setInt(3, attempts);
 
             ps.execute();
             return "{\"status\": \"OK\"}";
