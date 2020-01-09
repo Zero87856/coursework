@@ -6,7 +6,6 @@ import org.json.simple.JSONObject;
 
 import javax.validation.constraints.Null;
 import javax.ws.rs.GET;
-import javax.ws.rs.POST;
 import javax.ws.rs.Path;
 import javax.ws.rs.PathParam;
 import javax.ws.rs.Produces;
@@ -60,6 +59,7 @@ public class QuestionsController {
             return "{\"error\": \"Unable to list items, please see server console for more info.\"}";
         }
     }
+
     @GET
     @Path("tips/{qNo}")
     @Produces(MediaType.APPLICATION_JSON)
@@ -79,6 +79,7 @@ public class QuestionsController {
             return "{\"error\": \"Unable to list items, please see server console for more info.\"}";
         }
     }
+
     @GET
     @Path("startQuiz")
     @Produces(MediaType.APPLICATION_JSON)
@@ -117,12 +118,13 @@ public class QuestionsController {
             return "{\"error\": \"Unable to list items, please see server console for more info.\"}";
         }
     }
+
     @GET
     @Path("startQuiz/{qNo}")
     @Produces(MediaType.APPLICATION_JSON)
     public String listQuestionAndAnswers(@PathParam("qNo") Integer qNo) {
         System.out.println("question/startQuiz");
-        JSONArray list = new JSONArray();
+
         try {
 
             PreparedStatement ps = Main.db.prepareStatement("select questionContent, answerA,answerB,answerC, answerD from questions inner join answers a on questions.answerSet = a.answerSet where questionNo = ?;");
@@ -144,36 +146,50 @@ public class QuestionsController {
             return "{\"error\": \"Unable to list items, please see server console for more info.\"}";
         }
     }
+
     @GET
     @Path("ranCheck")
     @Produces(MediaType.APPLICATION_JSON)
-    public int num() {
+    public ArrayList<Integer> ranNum(@PathParam("length") Integer length) {
         try {
-            //Class.forName("com.mysql.jdbc.Driver");
-            //Connection connect = DriverManager.getConnection("jdbc:mysql://localhost/questions");
-            //Statement statement = connect.createStatement();
-            PreparedStatement ps = Main.db.prepareStatement("select count(*) from questions");
-            ResultSet results = ps.executeQuery();
-            int count = 0;
-            while (results.next()){
-                count++;
+            ArrayList<Integer> set = new ArrayList<>();
+            for (int i = 1; i <=length() ; i++) {
+                System.out.println(i);
+                set.add(i);
             }
-            return(count);
+            Collections.shuffle(set);
+            JSONArray list = new JSONArray();
+            for (int i = 0; i < 10; i++) {
+                System.out.println(list.get(i));
+            }
+            return(list);
+        }
+
+        catch (Exception e) {
+            return Null;
+        }
+    }
+    public int length() {
+        try {
+            PreparedStatement ps = Main.db.prepareStatement("select count(*) from questions where questionNo IS NOT NULL");
+            ResultSet results = ps.executeQuery();
+            JSONObject item = new JSONObject();
+            //int count = 0;
+            //while (results.next()){
+             //   count++;
+            //}
+            //System.out.println(count);
+            if (results.next()) {
+                item.put("listLength", results.getInt(1));
+            }
+            return (item);
         }
         catch (Exception e) {
-            return (0);
+            return "{\"error\": \"Unable to list items, please see server console for more info.\"}";
         }
     }
-    public void main(String[] args) {
-        ArrayList<Integer> list = new ArrayList<>();
-        for (int i = 1; i <= num(); i++) {
-            list.add(i);
-        }
-        Collections.shuffle(list);
-        for (int i = 0; i < 10; i++) {
-            System.out.println(list.get(i));
-        }
-    }
+
+
 
 
     @GET
@@ -214,53 +230,4 @@ public class QuestionsController {
             return "{\"error\": \"Unable to list items, please see server console for more info.\"}";
         }
     }
-    public static void insertQuestions(int questionNo, String questionContent, int questionDifficulty) {
-
-        try {
-
-            PreparedStatement ps = Main.db.prepareStatement(
-                    "INSERT INTO main.questions (questionNo, questionContent, questionDifficulty) VALUES (?, ?, ?)");
-
-            ps.setInt(1, questionNo);
-            ps.setString(2, questionContent);
-            ps.setInt(3, questionDifficulty);
-
-            ps.execute();
-
-        } catch (Exception exception) {
-            System.out.println("Database error: " + exception.getMessage());
-        }
-    }
-    public static void updateQuestions(int questionNo, String questionContent, int questionDifficulty) {
-
-        try {
-
-            var ps = Main.db.prepareStatement(
-                    "UPDATE questions SET questionContent = ?, questionDifficulty = ? WHERE questionNo = ?");
-
-            ps.setString(1, questionContent);
-            ps.setInt(2, questionDifficulty);
-            ps.setInt(3, questionNo);
-
-            ps.execute();
-
-        } catch (Exception exception) {
-            System.out.println("Database error: " + exception.getMessage());
-        }
-    }
-    public static void deleteQuestions(int questionNo) {
-
-        try {
-
-            PreparedStatement ps = Main.db.prepareStatement("DELETE FROM questions WHERE questionNo = ?");
-
-            ps.setInt(1, questionNo);
-
-            ps.execute();
-
-        } catch (Exception exception) {
-            System.out.println("Database error: " + exception.getMessage());
-        }
-    }
-
 }
