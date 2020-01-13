@@ -4,7 +4,6 @@ import Server.Main;
 import org.json.simple.JSONArray;
 import org.json.simple.JSONObject;
 
-import javax.validation.constraints.Null;
 import javax.ws.rs.GET;
 import javax.ws.rs.Path;
 import javax.ws.rs.PathParam;
@@ -124,7 +123,7 @@ public class QuestionsController {
     @Produces(MediaType.APPLICATION_JSON)
     public String listQuestionAndAnswers(@PathParam("qNo") Integer qNo) {
         System.out.println("question/startQuiz");
-
+        JSONArray list = new JSONArray();
         try {
 
             PreparedStatement ps = Main.db.prepareStatement("select questionContent, answerA,answerB,answerC, answerD from questions inner join answers a on questions.answerSet = a.answerSet where questionNo = ?;");
@@ -150,46 +149,37 @@ public class QuestionsController {
     @GET
     @Path("ranCheck")
     @Produces(MediaType.APPLICATION_JSON)
-    public ArrayList<Integer> ranNum(@PathParam("length") Integer length) {
+    public String ranNum() {
         try {
             ArrayList<Integer> set = new ArrayList<>();
-            for (int i = 1; i <=length() ; i++) {
-                System.out.println(i);
+            for (int i = 1; i <=length() ; i++) { ;
                 set.add(i);
             }
             Collections.shuffle(set);
+
             JSONArray list = new JSONArray();
             for (int i = 0; i < 10; i++) {
-                System.out.println(list.get(i));
+                list.add(set.get(i));
             }
-            return(list);
+
+            return list.toString();
         }
 
         catch (Exception e) {
-            return Null;
+            return "{\"error\": \"Unable to list items, please see server console for more info.\"}";
         }
     }
     public int length() {
         try {
             PreparedStatement ps = Main.db.prepareStatement("select count(*) from questions where questionNo IS NOT NULL");
             ResultSet results = ps.executeQuery();
-            JSONObject item = new JSONObject();
-            //int count = 0;
-            //while (results.next()){
-             //   count++;
-            //}
-            //System.out.println(count);
-            if (results.next()) {
-                item.put("listLength", results.getInt(1));
-            }
-            return (item);
+            int len = results.getInt(1);
+            return (len);
         }
         catch (Exception e) {
-            return "{\"error\": \"Unable to list items, please see server console for more info.\"}";
+            return (0);
         }
     }
-
-
 
 
     @GET
