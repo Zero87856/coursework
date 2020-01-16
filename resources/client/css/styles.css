@@ -1,18 +1,21 @@
 body {
-    background-color: navy;
-    margin: 0;
-    font-family: 'Arial', serif;
+    /background-color: navy;
+    /margin: 0;
+    font-family: 'Helvetica', serif;
+    color: azure;
 }
 
 h1 {
     margin-top:0;
+    font-family: 'Helvetica', serif;
+    color: azure;
 }
 
 #content {
-    background-color: white;
-    width: 1000px;
+    background-color: rgba(0, 0, 0, 0.76);
+    width: 1840px;
     margin: 0 auto;
-    min-height: 600px;
+    min-height: 900px;
     padding: 32px;
 }
 
