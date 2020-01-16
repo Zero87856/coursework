@@ -1,6 +1,6 @@
 body {
-    /background-color: navy;
-    /margin: 0;
+    background-color: navy;
+    margin:0;
     font-family: 'Helvetica', serif;
     color: azure;
 }
@@ -9,6 +9,15 @@ h1 {
     margin-top:0;
     font-family: 'Helvetica', serif;
     color: azure;
+}
+h2{
+    color: azure;
+    font-family: 'Helvetica', serif;
+}
+button{
+    margin: 20px;
+    color: rgba(0,0,0,0.76);
+    font-family: 'Helvetica', serif;
 }
 
 #content {
