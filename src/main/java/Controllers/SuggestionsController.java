@@ -18,10 +18,11 @@ public class SuggestionsController {
     @Path("input")
     @Consumes(MediaType.MULTIPART_FORM_DATA)
     @Produces(MediaType.APPLICATION_JSON)
-    public static void insertSuggestion(@FormDataParam("id") Integer id, @FormDataParam("content") String content, @FormDataParam("ans") String ans) {
+    public static void insertSuggestion(@FormDataParam("content") String content, @FormDataParam("ans") String ans) {
 
         try {
-            if (id == null || content == null || ans == null) {
+            int id = length() + 1;
+            if (content == null || ans == null) {
                 throw new Exception("One or more form data parameters are missing in the HTTP request.");
             }
             System.out.println("thing/new id=" + id);
@@ -35,6 +36,17 @@ public class SuggestionsController {
 
         } catch (Exception exception) {
             System.out.println("Database error: " + exception.getMessage());
+        }
+    }
+    public static int length() {
+        try {
+            PreparedStatement ps = Main.db.prepareStatement("select count(*) from questions where questionNo IS NOT NULL");
+            ResultSet results = ps.executeQuery();
+            int len = results.getInt(1);
+            return (len);
+        }
+        catch (Exception e) {
+            return (0);
         }
     }
 
