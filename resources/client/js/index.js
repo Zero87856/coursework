@@ -9,7 +9,7 @@ function pageLoad() {
         + '<a href="quiz.html"><button>Quiz</button></a>'
         + '<a href="sugg.html"><button>Suggest</button></a>'
         + '</h2>'
-        + '<p>This is all that is here</p>'
+        + '<p>This is all that is here for now</p>'
         + '</div>';
 
 
