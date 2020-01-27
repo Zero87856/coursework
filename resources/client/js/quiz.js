@@ -10,10 +10,6 @@ function pageLoad() {
         + '<a href="sugg.html"><button>Suggest</button></a>'
         + '</h2>'
         + '</div>';
-
-
-
-
     document.getElementById("testDiv").innerHTML = myHTML;
 
 }

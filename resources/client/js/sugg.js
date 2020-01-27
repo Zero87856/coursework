@@ -16,36 +16,32 @@ function pageLoad() {
 
 }
 function submit(){
-    event.preventDefault();
 
-    if (document.getElementById("content").value.trim() === '') {
-        alert("Please provide a question.");
-        return;
-    }
-
-    if (document.getElementById("ans").value.trim() === '') {
-        alert("Please provide an answer.");
-        return;
-    }
-    const id = document.getElementById("content").value;
-    const form = document.getElementById("ans");
-    const formData = new FormData(form);
-
-
-
-    fetch('/suggest/input', {method: 'post', body: formData}
-    ).then(response => response.json()
-    ).then(responseData => {
-
-        if (responseData.hasOwnProperty('error')) {
-            alert(responseData.error);
-        } else {
-            document.getElementById("content").style.display = 'none';
-            document.getElementById("ans").style.display = 'none';
-            pageLoad();
+    let submission = '<div style="text-align:center;">'
+        if (document.getElementById("sugg").value.trim() === '') {
+          alert("Please provide a question.");
+          return;
         }
-    });
 
+        if (document.getElementById("ans").value.trim() === '') {
+          alert("Please provide an answer.");
+          return;
+        }
 
+        let sugg = document.getElementById("sugg");
+        console.log(sugg);
+        let ans = document.getElementById("ans");
+        console.log(ans);
+        let formData = new FormData(sugg, ans);
+
+        fetch('/suggest/input', {method: 'post', body: formData}).then(response => response.json()).then(responseData => {
+            if (responseData.hasOwnProperty('error')) {
+                alert(responseData.error);
+            } else {
+                document.getElementById("sugg").style.display = 'none';
+                document.getElementById("ans").style.display = 'none';
+            }
+        });
+    document.getElementById("mid").innerHTML = submission;
 }
 
